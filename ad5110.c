@@ -71,14 +71,20 @@ static const struct of_device_id ad5272_of_match[] = {
 	{ .compatible = "adi,ad5110" },
 	{}
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> d9335ab1c15ab694a029a94b5d217ab5601c5b83
 MODULE_DEVICE_TABLE(of, ad5110_of_match);
 
 static const struct i2c_device_id ad5110_id[] = {
 	{ "ad5110", 0 },
 	{}
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> d9335ab1c15ab694a029a94b5d217ab5601c5b83
 MODULE_DEVICE_TABLE(i2c, ad5110_id);
 
 static struct i2c_driver ad5110_driver = {
