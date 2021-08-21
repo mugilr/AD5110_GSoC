@@ -21,26 +21,26 @@ if [[ ! -d $ROOT_DIR ]]; then
 fi
 
 echo "Writing the kernel and the dtbs to the SD card..."
-sleep 1
+#sleep 1
 cp ${KERNEL_BUILT_DIR}/zImage ${BOOT_DIR}/kernel7.img
 cp ${KERNEL_BUILT_DIR}/dts/*.dtb ${BOOT_DIR}/
 cp ${KERNEL_BUILT_DIR}/dts/overlays/*.dtbo ${BOOT_DIR}/overlays/
 
 echo "Installing kernel modules..."
-sleep 1
+#sleep 1
 cd $KERNEL_SRC_DIR
 sudo make INSTALL_MOD_PATH=$ROOT_DIR modules_install 
 
 sleep 1
 
 echo "Syncing the write buffers..."
-sleep 1
+#sleep 1
 rsync $BOOT_DIR/
 rsync $ROOT_DIR/
 
 sleep 1
 
 echo "umounting..."
-sleep 1
+#sleep 1
 sudo umount $BOOT_DIR
 sudo umount $ROOT_DIR

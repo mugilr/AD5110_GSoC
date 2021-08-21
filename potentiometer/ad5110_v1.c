@@ -19,10 +19,6 @@ struct ad5110_data {
 };
 
 static const struct iio_chan_spec ad5110_channels[] = {
-	.type = IIO_RESISTANCE,
-	.output = 1,
-	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
 };
 
 static int ad5110_read_raw(struct iio_dev *indio_dev,
@@ -44,18 +40,16 @@ static const struct iio_info ad5110_info = {
 	.write_raw = ad5110_write_raw,
 };
 
-static int ad5110_probe(struct i2c_client *client,
-			const struct i2c_device_id *id)
+static int ad5110_probe(struct i2c_client *client)
 {
 	struct device *dev = &client->dev;
 	struct iio_dev *indio_dev;
 	struct ad5110_data *data;
-
+	int ret;
+	
 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
 	if (!indio_dev)
 		return -ENOMEM;
-
-	i2c_set_clientdata(client, indio_dev);
 
 	data = iio_priv(indio_dev);
 	data->client = client;
@@ -66,7 +60,13 @@ static int ad5110_probe(struct i2c_client *client,
 	indio_dev->num_channels = ARRAY_SIZE(ad5110_channels);
 	indio_dev->name = client->name;
 
-	return devm_iio_device_register(dev, indio_dev);
+	ret = devm_iio_device_register(dev, indio_dev);
+	if (ret < 0){
+		pr_err("%s: error from the probe side\n", module_name(THIS_MODULE));
+		return ret;
+	}
+	pr_err("%s: Hello from the probe side\n", module_name(THIS_MODULE));
+	return ret;
 }
 
 static const struct of_device_id ad5110_of_match[] = {
@@ -86,7 +86,7 @@ static struct i2c_driver ad5110_driver = {
 		.name	= "ad5110",
 		.of_match_table = ad5110_of_match,
 	},
-	.probe		= ad5110_probe,
+	.probe_new		= ad5110_probe,
 	.id_table	= ad5110_id,
 };
 
@@ -95,3 +95,4 @@ module_i2c_driver(ad5110_driver);
 MODULE_AUTHOR("Mugilraj Dhavachelvan <dmugil2000@gmail.com>");
 MODULE_DESCRIPTION("AD5110 digital potentiometer");
 MODULE_LICENSE("GPL v2");
+
